@@ -1,0 +1,41 @@
+{{ form_start(form) }}
+    <table class="table mt-3">
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ client.id }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.nip, 'Nip') }}</th>
+            <td>{{ form_row(form.nip) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.regon, 'Regon') }}</th>
+            <td>{{ form_row(form.regon) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.name, 'Name') }}</th>
+            <td>{{ form_row(form.name) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.city, 'City') }}</th>
+            <td>{{ form_row(form.city) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.street, 'Street') }}</th>
+            <td>{{ form_row(form.street) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.zipCode, 'Zip Code') }}</th>
+            <td>{{ form_row(form.zipCode) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.province, 'Province') }}</th>
+            <td>{{ form_row(form.province) }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+<button class="btn btn-primary mb-3">{{ button_label|default('Save') }}</button>
+
+{{ form_end(form) }}

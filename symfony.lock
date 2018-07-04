@@ -71,6 +71,9 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
+    "gusapi/gusapi": {
+        "version": "3.3.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },

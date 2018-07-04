@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+    <table class="table mt-3">
+        <tbody>
+        <tr>
+            <th>{{ form_label(form.nip, 'Nip') }}</th>
+            <td>{{ form_row(form.nip) }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

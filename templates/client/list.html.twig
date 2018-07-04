@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Client index{% endblock %}
+
+{% block body %}
+    <form action="{{ path('client_new') }}" method="post">
+        <button type="submit" class="btn btn-primary mb-3">New Client</button>
+    </form>
+
+    <form action="" method="post">
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <input type="text" class="form-control" name="toSearch" placeholder="Search" required>
+        </div>
+        <div class="form-group col-md-5">
+            <select class="form-control" name="columnToSearch" required>
+                <option label="Choose column"></option>
+                {% for key, value in columns %} <option value="{{ key }}">{{ value }}</option> {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
+        </div>
+
+    </div>
+    </form>
+
+    <table class="table table-striped " id="table">
+        <thead class="thead-dark">
+            <tr>
+                {% for key, value in columns %} <th>{{ value }}</th> {% endfor %}
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.nip }}</td>
+                <td>{{ client.regon }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.city }}</td>
+                <td>{{ client.street }}</td>
+                <td>{{ client.zip_code }}</td>
+                <td>{{ client.province }}</td>
+                <td>
+                    <a href="{{ path('client_show', {'id': client.id}) }}">show</a> |
+                    <a href="{{ path('client_edit', {'id': client.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if (page is not defined) %} {% set page = 1 %} {% endif %}
+
+    <ul class="pagination">
+        <li class="page-item {% if page == 1 %}disabled{% endif %}"><a class="page-link" href="{{ path('client_index', {'page': page - 1, 'search': search, 'searchColumn': searchColumn}) }}" tabindex="-1">Previous</a></li>
+        {% for i in 1..nrOfPages %}
+            <li class="page-item {% if i == page %}active{% endif %}"><a class="page-link" href="{{ path('client_index', {'page': i, 'search': search, 'searchColumn': searchColumn}) }}">{{ i }} </a></li>
+        {% endfor %}
+        <li class="page-item {% if page == nrOfPages %}disabled{% endif %}"><a class="page-link" href="{{ path('client_index', {'page': page + 1, 'search': search, 'searchColumn': searchColumn}) }}" tabindex="-1">Next</a></li>
+    </ul>
+
+{% endblock %}
