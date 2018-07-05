@@ -61,6 +61,18 @@ class GusData
 
     }
 
+    public function saveClientFromGusData($em, $gusData)
+    {
+        $this->client->setRegon($gusData['regon']);
+        $this->client->setName($gusData['name']);
+        $this->client->setCity($gusData['city']);
+        $this->client->setStreet($gusData['street']);
+        $this->client->setZipCode($gusData['zipCode']);
+        $this->client->setProvince($gusData['province']);
+        $em->persist($this->client);
+        $em->flush();
+    }
+
 }
 
 

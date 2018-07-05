@@ -26,32 +26,18 @@ class ClientController extends Controller
      */
     public function index(ClientRepository $clientRepository, Request $request, $page, $search, $searchColumn)
     {
-        $limit = 2;
-        $offset = ($page - 1) * $limit;
-
         $em = $this->getDoctrine()->getManager();
 
-        $dbColumns = $em->getClassMetadata(Client::class)->getColumnNames();
-        $columns = [];
-        foreach ($dbColumns as $dBColumn) {
-            $columns[$dBColumn] = ucwords(str_replace('_', ' ', $dBColumn));
-        }
-
-        ($request->get('toSearch')) ? $toSearch = $request->get('toSearch') : $toSearch = $search;
-        ($request->get('columnToSearch')) ? $columnToSearch = $request->get('columnToSearch') : $columnToSearch = $searchColumn;
-
-        $clients = $clientRepository->searchForClients($toSearch, $columnToSearch, $limit, $offset);
-
-        $nrOfClients = count($clients['allClients']);
-        $nrOfPages = ceil($nrOfClients / $limit);
+        $columns = $clientRepository->getColumns($em);
+        $clients = $clientRepository->searchForClients($request, $page, $search, $searchColumn);
 
         return $this->render('client/list.html.twig', [
             'page' => $page,
-            'nrOfPages' => $nrOfPages,
+            'nrOfPages' => $clients['nrOfPages'],
             'columns' => $columns,
             'clients' => $clients['clients'],
-            'search' => $toSearch,
-            'searchColumn' => $columnToSearch
+            'search' => $search,
+            'searchColumn' => $searchColumn
         ]);
     }
 
@@ -67,21 +53,11 @@ class ClientController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $gusData = new GusData($client);
-            $gusData = $gusData->getParsedData();
+            $gusDataParsed = $gusData->getParsedData();
 
-            if ($gusData) {
+            if ($gusDataParsed) {
                 $em = $this->getDoctrine()->getManager();
-
-                $client->setRegon($gusData['regon']);
-                $client->setName($gusData['name']);
-                $client->setCity($gusData['city']);
-                $client->setStreet($gusData['street']);
-                $client->setZipCode($gusData['zipCode']);
-                $client->setProvince($gusData['province']);
-
-                $em->persist($client);
-                $em->flush();
-
+                $gusData->saveClientFromGusData($em, $gusDataParsed);
                 return $this->redirectToRoute('client_index');
             }
 

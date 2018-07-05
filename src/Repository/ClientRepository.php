@@ -30,10 +30,26 @@ class ClientRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function searchForClients($toSearch = null, $columnToSearch = null, $limit, $offset)
+    public function getColumns($em)
     {
+        $dbColumns = $em->getClassMetadata(Client::class)->getColumnNames();
+        $columns = [];
+        foreach ($dbColumns as $dBColumn) {
+            $columns[$dBColumn] = ucwords(str_replace('_', ' ', $dBColumn));
+        }
+        return $columns;
+    }
+
+    public function searchForClients($request, $page, $toSearch = null, $columnToSearch = null)
+    {
+        $limit = 2;
+        $offset = ($page - 1) * $limit;
+
         $entityManager = $this->getEntityManager();
         $clientRepository = $entityManager->getRepository(Client::class);
+
+        if ($request->get('toSearch')) $toSearch = $request->get('toSearch');
+        if ($request->get('columnToSearch')) $columnToSearch = $request->get('columnToSearch');
 
         if ($toSearch && $columnToSearch) {
             $allClients = $clientRepository->findBy([$columnToSearch => filter_var($toSearch, FILTER_SANITIZE_STRING)]);
@@ -43,7 +59,10 @@ class ClientRepository extends ServiceEntityRepository
             $clients = $this->findAllLimit($limit, $offset);
         }
 
-        return ['allClients' => $allClients, 'clients' => $clients];
+        $nrOfClients = count($allClients);
+        $nrOfPages = ceil($nrOfClients / $limit);
+
+        return ['clients' => $clients, 'nrOfPages' => $nrOfPages];
     }
 
 }
