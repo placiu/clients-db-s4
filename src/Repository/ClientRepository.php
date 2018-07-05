@@ -62,7 +62,7 @@ class ClientRepository extends ServiceEntityRepository
         $nrOfClients = count($allClients);
         $nrOfPages = ceil($nrOfClients / $limit);
 
-        return ['clients' => $clients, 'nrOfPages' => $nrOfPages];
+        return ['clients' => $clients, 'nrOfPages' => $nrOfPages, 'toSearch' => $toSearch, 'columnToSearch' => $columnToSearch];
     }
 
 }

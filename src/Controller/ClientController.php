@@ -36,8 +36,8 @@ class ClientController extends Controller
             'nrOfPages' => $clients['nrOfPages'],
             'columns' => $columns,
             'clients' => $clients['clients'],
-            'search' => $search,
-            'searchColumn' => $searchColumn
+            'search' => $clients['toSearch'],
+            'searchColumn' => $clients['columnToSearch']
         ]);
     }
 
